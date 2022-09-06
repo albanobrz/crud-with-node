@@ -21,4 +21,10 @@ module.exports = (app) => {
         const {id} = req.params
         Pessoa.remove(id, res)
     })
+
+    app.patch('/update/:id', (req, res) => {
+        const id = parseInt(req.params.id)
+        const body = req.body
+        Pessoa.update(id, body, res)
+    })
 }

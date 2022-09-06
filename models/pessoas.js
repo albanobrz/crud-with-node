@@ -3,6 +3,7 @@ const conexao = require('../infraestrutura/conexao')
 class Pessoas {
     adiciona(pessoas) {
         const query = "insert into pessoas set ?"
+
         conexao.status(201).query(query, pessoas, (erro, resultado) => {
             erro ? console.log(erro) : console.log(resultado)
         })
@@ -41,13 +42,6 @@ class Pessoas {
     remove(id, res) {
         const queryDelete = `delete from pessoas where id = ${id}`
         const queryExists = `select * from pessoas where id = ${id}`
-        // if (this.listaId(id, res)) {
-        //     conexao.query(query, (erro, resultado) => {
-        //         erro ? res.status(400).json({data: 'erro ao excluir'}) : res.status(200).json({data:'usuario excluido com sucesso'})
-        //     })
-        // } else {
-        //     res.status(404).json({data: 'usuário inexistente'})
-        // }
 
         conexao.query(queryExists, (erro, resultado) => {
             console.log(erro, resultado)
@@ -63,10 +57,13 @@ class Pessoas {
                 })
             }
         })
+    }
+    update(id, body, res) {
+        const query = `update pessoas set ? where id = ?`
 
-        // conexao.query(query, (erro, resultado) => {
-        //     erro ? res.status(400).json({data: 'erro ao excluir'}) : res.status(200).json(resultado)
-        // })
+        conexao.query(query, [body, id], (erro, resultado) => {
+            erro ? res.status(400).json({data: "não foi possível atualizar usuário"}) : res.status(200).json({...body, id}) 
+        })
     }
 }
 
